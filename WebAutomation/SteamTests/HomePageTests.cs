@@ -38,6 +38,8 @@ namespace SteamTests
             homePage.navigateTo();
             homePage.SearchForGame(gameName);
 
+            var titles = homePage.GetSearchResults();
+
         } 
 
     }

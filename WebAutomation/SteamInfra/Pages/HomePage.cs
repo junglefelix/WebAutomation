@@ -15,6 +15,8 @@ namespace SteamInfra.Pages
 
         //Locators
         private By searchSelector => By.CssSelector("#store_nav_search_term");
+        private By searchListItem => By.CssSelector("#search_resultsRows > a  > div.responsive_search_name_combined > div.col.search_name.ellipsis > span");
+        
 
 
         public HomePage navigateTo()
@@ -31,6 +33,17 @@ namespace SteamInfra.Pages
            IWebElement searchWindow =  locatorHelper.waitForElement(searchSelector);
             searchWindow.Click();
             searchWindow.SendKeys(gameName + Keys.Return);
+        }
+
+        public List<string> GetSearchResults()
+        {
+            List<string> titles = new List<string>();
+            var items = driver.FindElements(searchListItem);
+            foreach(var item in items)
+            {
+                titles.Add(item.Text);
+            }
+            return titles;
         }
 
     }
