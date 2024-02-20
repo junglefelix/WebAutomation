@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/WebAutomation/.vs/WebAutomation
+/WebAutomation/SteamInfra/bin/Debug/net6.0
+/WebAutomation/SteamInfra/obj
+/WebAutomation/SteamTests/bin/Debug/net6.0
+/WebAutomation/SteamTests/obj
