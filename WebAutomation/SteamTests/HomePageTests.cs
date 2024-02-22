@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SteamInfra.Pages;
 using SteamTests.Helpers;
+using System.Globalization;
 
 namespace SteamTests
 {
@@ -38,9 +39,17 @@ namespace SteamTests
             homePage.navigateTo();
             homePage.SearchForGame(gameName);
 
-            var titles = homePage.GetSearchResults();
+            var titles = Pages.gameResultsOnHomePage.GetSearchResultsTitles();
+            var prices = Pages.gameResultsOnHomePage.GetSearchPriceResults();
+            var releaseDates = Pages.gameResultsOnHomePage.GetSearchReleaseDateResults();
 
-        } 
+           var results = Pages.gameResultsOnHomePage.GetGameResultsData(titles,prices,releaseDates);
+
+    
+
+        }
+
+       
 
     }
 }

@@ -11,5 +11,8 @@ namespace SteamInfra.Pages
         private static HomePage _homePage;
         public static HomePage homePage => _homePage ?? (_homePage = new HomePage());
 
+        private static GameResult _gameResultsOnHomePage;
+        public static GameResult gameResultsOnHomePage => _gameResultsOnHomePage ?? (_gameResultsOnHomePage = new GameResult());
+
     }
 }
