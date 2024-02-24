@@ -36,7 +36,7 @@ namespace SteamTests
         {
             string gameName = "Starcraft";
 
-            logger.Debug($"Will search for starcraft");
+            logger.Debug($"Will search for {gameName}");
             homePage.navigateTo();
             homePage.SearchForGame(gameName);
 
