@@ -34,13 +34,23 @@ namespace SteamTests
         public void SearchForGame()
         {
             string gameName = "Starcraft";
+
             logger.Debug($"Will search for starcraft");
             homePage.navigateTo();
             homePage.SearchForGame(gameName);
 
             var titles = homePage.GetSearchResults();
 
-        } 
+        }
+
+
+        [Test]
+        public void ConvertToDouble()
+        {
+            string str = "54.00";
+            double num = Convert.ToDouble(str);
+        }
+
 
     }
 }
