@@ -1,5 +1,6 @@
 ﻿using NLog;
 using NUnit.Framework;
+using SteamInfra.Helpers;
 using SteamInfra.Pages;
 using SteamTests.Helpers;
 
@@ -40,6 +41,7 @@ namespace SteamTests
             homePage.SearchForGame(gameName);
 
             var titles = homePage.GetSearchResults();
+            logger.Debug($"titles object is: {Environment.NewLine}{DataHelper.PrintObject(titles)}");
 
         }
 
