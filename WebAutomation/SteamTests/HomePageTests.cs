@@ -33,7 +33,8 @@ namespace SteamTests
 
         [Test]
         public void SearchForGame()
-        {
+        {         
+
             string gameName = "Starcraft";
             logger.Debug($"Will search for starcraft");
             homePage.navigateTo();

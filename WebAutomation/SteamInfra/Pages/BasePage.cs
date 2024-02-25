@@ -19,6 +19,7 @@ namespace SteamInfra.Pages
         protected static IWebDriver driver;
         protected static string baseUrl;
         protected static  LocatorHelper locatorHelper;
+      
 
 
         public static void initDriver(string _baseUrl)
