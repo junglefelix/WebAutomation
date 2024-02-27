@@ -42,33 +42,16 @@ namespace SteamTests
             homePage.navigateTo();
             homePage.SearchForGame(gameName);
 
-<<<<<<< HEAD
             var titles = Pages.gameResultsOnHomePage.GetSearchResultsTitles();
             var prices = Pages.gameResultsOnHomePage.GetSearchPriceResults();
             var releaseDates = Pages.gameResultsOnHomePage.GetSearchReleaseDateResults();
 
-           var results = Pages.gameResultsOnHomePage.GetGameResultsData(titles,prices,releaseDates);
+            //  var results = Pages.gameResultsOnHomePage.GetGameResultsData(titles,prices,releaseDates);
 
-    
-
-        }
-
-       
-=======
-            var titles = homePage.GetSearchResults();
-            logger.Debug($"titles object is: {Environment.NewLine}{DataHelper.PrintObject(titles)}");
-
-        }
+            var resultsFiltered = Pages.gameResultsOnHomePage.GetGameResultsDataFiltered(titles, prices, releaseDates,10,20,"1 янв. 2021", "1 янв. 2024");
 
 
-        [Test]
-        public void ConvertToDouble()
-        {
-            string str = "54.00";
-            double num = Convert.ToDouble(str);
-        }
-
->>>>>>> 82278e58c2c8c503ff26a218a998bc683852bb1b
+        } 
 
     }
 }
