@@ -40,16 +40,12 @@ namespace SteamTests
 
             logger.Debug($"Will search for game: {gameName}");
             homePage.navigateTo();
-            homePage.SearchForGame(gameName);
+            homePage.SearchForGame(gameName);                      
 
-            var titles = Pages.gameResultsOnHomePage.GetSearchResultsTitles();
-            var prices = Pages.gameResultsOnHomePage.GetSearchPriceResults();
-            var releaseDates = Pages.gameResultsOnHomePage.GetSearchReleaseDateResults();
+           //var results = game.GetGameResultsData();
 
-            //  var results = Pages.gameResultsOnHomePage.GetGameResultsData(titles,prices,releaseDates);
-
-            var resultsFiltered = Pages.gameResultsOnHomePage.GetGameResultsDataFiltered(titles, prices, releaseDates,10,20,"1 янв. 2021", "1 янв. 2024");
-
+            var resultsFiltered = game.GetGameResultsDataFiltered(10, 20, "1 янв. 2021", "1 янв. 2024");
+            
 
         } 
 

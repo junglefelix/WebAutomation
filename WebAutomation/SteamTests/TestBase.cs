@@ -16,7 +16,7 @@ namespace SteamTests
         protected static string logPath = @"C:\Temp\SteamAutomation.log";
         protected static ILogger logger;
         protected HomePage homePage => Pages.homePage;
-
+        protected GameResult game => Pages.gameResultsOnHomePage;
 
 
         [OneTimeSetUp]

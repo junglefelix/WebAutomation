@@ -11,164 +11,88 @@ namespace SteamInfra.Pages
     public class GameResult : BasePage
     {
         private By searchListItem => By.CssSelector("#search_resultsRows > a  > div.responsive_search_name_combined > div.col.search_name.ellipsis > span");
-
         private By searchListItemPrice => By.CssSelector("#search_resultsRows > a > div.responsive_search_name_combined > div.col.search_price_discount_combined.responsive_secondrow > div > div > div.discount_prices > div.discount_final_price");
-
         private By searchListItemReleaseDate => By.CssSelector("#search_resultsRows > a > div.responsive_search_name_combined > div.col.search_released.responsive_secondrow");
+        private By searchListItemSupportWindows => By.CssSelector("#search_resultsRows > a > div.responsive_search_name_combined > div.col.search_name.ellipsis > div > span.platform_img.win");
+        private By searchListItemSupportMac => By.CssSelector("#search_resultsRows > a > div.responsive_search_name_combined > div.col.search_name.ellipsis > div > span.platform_img.mac");
+        private By searchListItemSupportLinux => By.CssSelector("#search_resultsRows > a > div.responsive_search_name_combined > div.col.search_name.ellipsis > div > span.platform_img.linux");
 
         private string gameTitle;
         private double gamePrice;
-        private ReleaseDate gameReleaseDate;
-
-
-
-        public List<string> GetSearchResultsTitles()
+        private DateTime gameReleaseDate;
+        private string gameSupportWindows;
+        public List<GameResult> GetGameResultsData()
         {
-            List<string> titles = new List<string>();
-            var items = driver.FindElements(searchListItem);
-            foreach (var item in items)
-            {
-                titles.Add(item.Text);
-            }
-            return titles;
-        }
-
-        public List<string> GetSearchPriceResults()
-        {
-            List<string> prices = new List<string>();
-            var items = driver.FindElements(searchListItemPrice);
-            foreach (var item in items)
-            {
-                prices.Add(item.Text);
-            }
-            return prices;
-        }
-
-
-
-        public List<string> GetSearchReleaseDateResults()
-        {
-            List<string> releaseDates = new List<string>();
-            var items = driver.FindElements(searchListItemReleaseDate);
-            foreach (var item in items)
-            {
-                releaseDates.Add(item.Text);
-            }
-            return releaseDates;
-        }
-
-
-        public List<GameResult> GetGameResultsData(List<string> titles, List<string> prices, List<string> releaseDates)
-        {
-
-
             var results = new List<GameResult>();
+            var titleItems = driver.FindElements(searchListItem);
+            var priceItems = driver.FindElements(searchListItemPrice);
+            var releaseDateItems = driver.FindElements(searchListItemReleaseDate);
+            var windowsSupportedSigns = driver.FindElements(searchListItemSupportWindows); //how to check it for each game?
+            var linuxSupportedSigns = driver.FindElements(searchListItemSupportLinux);
+            var macSupportedSigns = driver.FindElements(searchListItemSupportMac);               
 
-            for (int i = 0; i < titles.Count; i++)
-            {
-                GameResult _game = new GameResult();
-                ReleaseDate _releaseDate = new ReleaseDate();
-                _game.gameTitle = titles[i];
-                _game.gamePrice = PriceToDouble(prices[i]);
-                _game.gameReleaseDate = _releaseDate.RevealDateDetails(releaseDates[i]);
-                logger.Debug($"Game Title {i + 1}: {_game.gameTitle}, Price: {_game.gamePrice},Release Date: {_game.gameReleaseDate.day}/{_game.gameReleaseDate.month}/{_game.gameReleaseDate.year}");
-                results.Add(_game);
+            for (int i = 0; i < titleItems.Count; i++)
+            {               
+                this.gameTitle = titleItems[i].Text;
+                this.gamePrice = ConvertToDouble(priceItems[i].Text);
+                this.gameReleaseDate = ConvertToDateTime(releaseDateItems[i].Text);
+                
+                
+                logger.Debug($"Game Title {i + 1}: {this.gameTitle}, Price: {this.gamePrice},Release Date: {this.gameReleaseDate}");
+                results.Add(this);
             }
             return results;
         }
 
-        public List<GameResult> GetGameResultsDataFiltered(List<string> titles, List<string> prices, List<string> releaseDates, double minPrice, double maxPrice, string minDate, string maxDate)
+        public List<GameResult> GetGameResultsDataFiltered(double minPrice, double maxPrice, string minDate, string maxDate)
         {
-            ReleaseDate minReleaseDate = new ReleaseDate();
-            ReleaseDate maxReleaseDate = new ReleaseDate();
-            minReleaseDate = minReleaseDate.RevealDateDetails(minDate);
-            maxReleaseDate = maxReleaseDate.RevealDateDetails(maxDate);
-
             var resultsFiltered = new List<GameResult>();
+            var titleItems = driver.FindElements(searchListItem);
+            var priceItems = driver.FindElements(searchListItemPrice);
+            var releaseDateItems = driver.FindElements(searchListItemReleaseDate);
+            var windowsSupportedSigns = driver.FindElements(searchListItemSupportWindows);
+            var linuxSupportedSigns = driver.FindElements(searchListItemSupportLinux);
+            var macSupportedSigns = driver.FindElements(searchListItemSupportMac);
 
-            for (int i = 0; i < titles.Count; i++)
+            DateTime min_Date = ConvertToDateTime(minDate);
+            DateTime max_Date = ConvertToDateTime(maxDate);
+
+            for (int i = 0; i < titleItems.Count; i++)
             {
-                GameResult _game = new GameResult();
-                ReleaseDate _releaseDate = new ReleaseDate();
-                _game.gameTitle = titles[i];
-                _game.gamePrice = PriceToDouble(prices[i]);
-                _game.gameReleaseDate = _releaseDate.RevealDateDetails(releaseDates[i]);
-               
-                if ((_game.gameReleaseDate.CompareDates(minReleaseDate) > 0) && (_game.gameReleaseDate.CompareDates(maxReleaseDate) < 0))
+                this.gameTitle = titleItems[i].Text;
+                this.gamePrice = ConvertToDouble(priceItems[i].Text);
+                this.gameReleaseDate = ConvertToDateTime(releaseDateItems[i].Text);
+                if ((minPrice<=this.gamePrice)&&(this.gamePrice<=maxPrice)&& (min_Date <= this.gameReleaseDate) && (this.gameReleaseDate <= max_Date))
                 {
-                    if ((_game.gamePrice > minPrice) && (_game.gamePrice < maxPrice))
-                    {
-                        logger.Debug($"Game Title {i + 1}: {_game.gameTitle}, Price: {_game.gamePrice},Release Date: {_game.gameReleaseDate.day}/{_game.gameReleaseDate.month}/{_game.gameReleaseDate.year}");
-                        resultsFiltered.Add(_game);
-                    }
+                        logger.Debug($"Game Title {i + 1}: {this.gameTitle}, Price: {this.gamePrice},Release Date: {this.gameReleaseDate}");
+                        resultsFiltered.Add(this);                    
                 }
+                
             }
             return resultsFiltered;
         }
 
-        private double PriceToDouble(string price)
-        {
-            string priceWithoutSymbols = price.Replace("₪", "").Replace("Бесплатно", "0.0").Replace("$", "");
-            double finalPrice = Convert.ToDouble(priceWithoutSymbols, CultureInfo.InvariantCulture);
-            return finalPrice;
+        public double ConvertToDouble(string price)
+        {            
+                string priceWithoutSymbols = price.Replace("₪", "").Replace("Бесплатно", "0.0").Replace("$", "");
+                double finalPrice = Convert.ToDouble(priceWithoutSymbols, CultureInfo.InvariantCulture);                   
+                return finalPrice;
         }
 
-        private class ReleaseDate
+        public static DateTime ConvertToDateTime(string releaseDateItem)
         {
-            public int day;
-            public int year;
-            public int month;
-            private static Dictionary<string, int> months;
-
-
-
-
-            public ReleaseDate()
+            string[] formats = { "d MMM. yyyy", "dd MMM. yyyy","d MMM yyyy","dd MMM yyyy","d MMMM yyyy","dd MMMM yyyy","d MMMM. yyyy","dd MMMM. yyyy",
+                                 "d mmm. yyyy", "dd mmm. yyyy","d mmm yyyy","dd mmm yyyy","d mmmm yyyy","dd mmmm yyyy","d mmmm. yyyy","dd mmmm. yyyy"};
+            DateTime releaseDate;
+            CultureInfo russianCulture = new CultureInfo("ru-RU");
+            foreach (string format in formats) 
             {
-                this.day = 0;
-                this.month = 0;
-                this.year = 0;
-                if (months == null)
+                if(DateTime.TryParseExact(releaseDateItem, format, russianCulture,DateTimeStyles.None,out releaseDate))
                 {
-                    months = new Dictionary<string, int>();
-                    months.Add("Jan", 1); months.Add("янв", 1); months.Add("Feb", 2); months.Add("фев", 2); months.Add("Mar", 3); months.Add("мар", 3); months.Add("Apr", 4); months.Add("апр", 4); months.Add("мая", 5); months.Add("May", 5);
-                    months.Add("Jun", 6); months.Add("июн", 6); months.Add("Jul", 7); months.Add("июл", 7); months.Add("Aug", 8); months.Add("авг", 8); months.Add("Sep", 9); months.Add("сен", 9); months.Add("Oct", 10); months.Add("окт", 10);
-                    months.Add("Nov", 11); months.Add("ноя", 11); months.Add("Dec", 12); months.Add("дек", 12);
+                    return releaseDate.Date;
                 }
             }
-
-            public ReleaseDate RevealDateDetails(string releaseDateResult)  //1 Oct. 2021; 17 Nov. 2022
-            {
-                year = Convert.ToInt32(releaseDateResult.Substring(releaseDateResult.Length - 4), CultureInfo.InvariantCulture);
-                month = months[releaseDateResult.Substring(releaseDateResult.Length - 9, 3)];
-                if (releaseDateResult.Length == 11)
-                {
-                    day = Convert.ToInt32(releaseDateResult[0] - '0', CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    day = Convert.ToInt32(releaseDateResult.Substring(0, 2), CultureInfo.InvariantCulture);
-                }
-                return this;
-            }
-
-            public int CompareDates(ReleaseDate otherDate)
-            {
-
-                if (this.year != otherDate.year)
-                {
-                    return this.year.CompareTo(otherDate.year);
-                }
-                else if (this.month != otherDate.month)
-                {
-                    return this.month.CompareTo(otherDate.month);
-                }
-                else
-                {
-                    return this.day.CompareTo(otherDate.day);
-                }
-            }
-        }
+            throw new FormatException($"Invalid date format: {releaseDateItem}");
+        }   
     }
 }
-
