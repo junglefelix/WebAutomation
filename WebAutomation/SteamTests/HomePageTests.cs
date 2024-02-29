@@ -1,5 +1,6 @@
 ﻿using NLog;
 using NUnit.Framework;
+using SteamInfra.DataModels;
 using SteamInfra.Helpers;
 using SteamInfra.Pages;
 using SteamTests.Helpers;
@@ -44,7 +45,25 @@ namespace SteamTests
 
            //var results = game.GetGameResultsData();
 
-            var resultsFiltered = game.GetGameResultsDataFiltered(10, 20, "1 янв. 2021", "1 янв. 2024");
+            var resultsFiltered = searchResPage.GetGameResultsDataFiltered(10, 20, "1 Jan. 2021", "1 Jan. 2024");
+            
+
+        } 
+               
+
+        [Test]
+        public void SearchForGame_AllResults()
+        {         
+
+            string gameName = "Starcraft";
+
+            logger.Debug($"Will search for game: {gameName}");
+            homePage.navigateTo();
+            homePage.SearchForGame(gameName);                      
+
+          
+
+            List<SearchEntry> games  = searchResPage.GetGameResultsData();
             
 
         } 
