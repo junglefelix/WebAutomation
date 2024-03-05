@@ -70,7 +70,24 @@ namespace SteamTests
             List<SearchEntry> games  = searchResPage.GetGameResultsData();
             
 
-        } 
+        }
+
+        [Test]
+        public void ChangeLanguage()
+        {
+
+           
+            homePage.navigateTo();
+            homePage.ChangeLanguage(Language.Russian);
+            homePage.ChangeLanguage(Language.English);
+
+
+
+
+           
+
+
+        }
 
     }
 }
