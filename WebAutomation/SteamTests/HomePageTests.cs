@@ -34,60 +34,44 @@ namespace SteamTests
        
 
         [Test]
-        public void SearchForGame()
-        {         
-            /*
+        public void SearchForGame_Filtered_Results()
+        {
+            
             string gameName = "Starcraft";
             double minimum_price = 10;
             double maximum_price = 20;
             DateTime minimum_date = new DateTime(2021,1,1);
             DateTime maximum_date = new DateTime(2024, 1, 1);
-
+            
             logger.Debug($"Will search for game: {gameName}");
             homePage.navigateTo();
-            homePage.SearchForGame(gameName);                      
-
-           var results = searchResPage.GetGameResultsData();
-
-            var resultsFiltered = searchResPage.GetGameResultsDataFiltered(minimum_price, maximum_price, minimum_date, maximum_date);
-            
-            */
-        } 
-               
-
-        [Test]
-        public void SearchForGame_AllResults()
-        {         
-
-            string gameName = "Starcraft";
-
-            logger.Debug($"Will search for game: {gameName}");
-            homePage.navigateTo();
-            homePage.SearchForGame(gameName);                      
-
-          
-
-            List<SearchEntry> games  = searchResPage.GetGameResultsData();
-            
-
-        }
-
-        [Test]
-        public void ChangeLanguage()
-        {
-
-           
-            homePage.navigateTo();
-            homePage.ChangeLanguage(Language.Russian);
             homePage.ChangeLanguage(Language.English);
-
-
-
-
-           
-
-
+            homePage.SearchForGame(gameName);  
+            var resultsFiltered = searchResPage.GetGameResultsDataFiltered(minimum_price, maximum_price, minimum_date, maximum_date);              
         }
 
+        
+       [Test]
+       public void SearchForGame_AllResults()
+       {         
+
+           string gameName = "Starcraft";
+
+           logger.Debug($"Will search for game: {gameName}");
+           homePage.navigateTo();
+           homePage.ChangeLanguage(Language.English);
+           homePage.SearchForGame(gameName);   
+           List<SearchEntry> games  = searchResPage.GetGameResultsData();
+       }
+
+
+       [Test]
+       public void ChangeLanguage()
+       {           
+           homePage.navigateTo();
+           homePage.ChangeLanguage(Language.Russian);
+           homePage.ChangeLanguage(Language.English); 
+       }
+       
     }
 }

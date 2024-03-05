@@ -23,44 +23,54 @@ namespace SteamInfra.Pages
       
         public List<SearchEntry> GetGameResultsData()
         {
-            var results = new List<SearchEntry>();
-
-            var resultContainers = driver.FindElements(searchEntryParent);
-            foreach(var container in resultContainers)
-            {
-                SearchEntry entry = new SearchEntry();
-                entry.GameName = container.FindElement(By.CssSelector("div.col.search_name.ellipsis > span")).Text;
-                entry.PriceStr = container.FindElement(By.CssSelector("div.col.search_price_discount_combined.responsive_secondrow > div > div > div.discount_prices > div.discount_final_price")).Text;
-                entry.ReleaseDateStr = container.FindElement(By.CssSelector("div.col.search_released.responsive_secondrow")).Text;
-                                              
-                entry.ProcessEntry();
-                if (entry.ReleaseDate<=DateTime.Now) 
-                {
-                    results.Add(entry);
-                }
-               
-            }
+            var results = ProcessingEntries();      
             return results;
         }
-
         public List<SearchEntry> GetGameResultsDataFiltered(double minPrice, double maxPrice, DateTime minDate, DateTime maxDate)
         {
+            var results = ProcessingEntries();
             var resultsFiltered = new List<SearchEntry>();
-            var resultContainers = driver.FindElements(searchEntryParent);
-            foreach (var container in resultContainers.Take(10))
+            foreach ( var entry in results) 
             {
-                SearchEntry entry = new SearchEntry();
-                entry.GameName = container.FindElement(By.CssSelector("div.col.search_name.ellipsis > span")).Text;
-                entry.PriceStr = container.FindElement(By.CssSelector("div.col.search_price_discount_combined.responsive_secondrow > div > div > div.discount_prices > div.discount_final_price")).Text;
-                entry.ReleaseDateStr = container.FindElement(By.CssSelector("div.col.search_released.responsive_secondrow")).Text;
-
-                entry.ProcessEntry();
                 if ((minPrice <= entry.Price) && (entry.Price <= maxPrice) && (minDate <= entry.ReleaseDate) && (entry.ReleaseDate <= maxDate))
                 {
                     resultsFiltered.Add(entry);
                 }
             }
             return resultsFiltered;
-        }   
+        }        
+        public List<SearchEntry> ProcessingEntries()
+        {
+            var results = new List<SearchEntry>();
+            var resultContainers = driver.FindElements(searchEntryParent);
+            foreach (var container in resultContainers)
+            {
+                SearchEntry entry = new SearchEntry();
+                entry.GameName = container.FindElement(By.CssSelector("div.col.search_name.ellipsis > span")).Text;
+                try
+                {
+                    entry.PriceStr = container.FindElement(By.CssSelector("div.col.search_price_discount_combined.responsive_secondrow > div > div > div.discount_prices > div.discount_final_price")).Text;
+                }
+                catch (NoSuchElementException noPriceElement)
+                {
+                    entry.PriceStr = "0.0";
+                }
+                try
+                {
+                    entry.ReleaseDateStr = container.FindElement(By.CssSelector("div.col.search_released.responsive_secondrow")).Text;
+                }
+                catch (NoSuchElementException ReleaseDateEmpty)
+                {
+                    entry.ReleaseDateStr = "";
+                }
+                entry.ProcessEntry();
+                if (entry.ReleaseDate <= DateTime.Now)
+                {
+                    results.Add(entry);
+                }
+
+            }
+            return results;
+        }
     }
 }

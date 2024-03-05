@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+
 
 namespace SteamInfra.Pages
 {
@@ -25,6 +27,9 @@ namespace SteamInfra.Pages
         public HomePage navigateTo()
         {
             driver.Navigate().GoToUrl(baseUrl + HomePageSuffix);
+        //    driver.FindElement(languageSelector).Click();
+         //   driver.FindElement(By.LinkText("English (английский)")).Click();
+
 
             //waitForPageToLoad();
             pause(1000);
@@ -33,9 +38,18 @@ namespace SteamInfra.Pages
 
         public void SearchForGame(string gameName)
         {
-            IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
-            searchWindow.Click();
-            searchWindow.SendKeys(gameName + Keys.Return);
+            try
+            {
+                IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
+                searchWindow.Click();
+                searchWindow.SendKeys(gameName + Keys.Return);
+            }
+            catch (StaleElementReferenceException) 
+            {
+                IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
+                searchWindow.Click();
+                searchWindow.SendKeys(gameName + Keys.Return);
+            }
         }
 
 

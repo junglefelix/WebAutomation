@@ -27,7 +27,8 @@ namespace SteamInfra.DataModels
 
         private double ConvertToDouble(string price)
         {
-            string priceWithoutSymbols = price.Replace("₪", "").Replace("Бесплатно", "0.0").Replace("$", "").Replace("Free", "0.0").Replace("","0.0");
+            
+            string priceWithoutSymbols = price.Replace("₪", "").Replace("Бесплатно", "0.0").Replace("$", "").Replace("Free", "0.0");
             double finalPrice = Convert.ToDouble(priceWithoutSymbols, CultureInfo.InvariantCulture);
             return finalPrice;
         }
@@ -36,7 +37,8 @@ namespace SteamInfra.DataModels
         private static DateTime ConvertToDateTime(string releaseDateItem)
         {
             string[] formats = { "d MMM. yyyy", "dd MMM. yyyy","d MMM yyyy","dd MMM yyyy","d MMMM yyyy","dd MMMM yyyy","d MMMM. yyyy","dd MMMM. yyyy",
-                                 "d mmm. yyyy", "dd mmm. yyyy","d mmm yyyy","dd mmm yyyy","d mmmm yyyy","dd mmmm yyyy","d mmmm. yyyy","dd mmmm. yyyy"};
+                                 "d mmm. yyyy", "dd mmm. yyyy","d mmm yyyy","dd mmm yyyy","d mmmm yyyy","dd mmmm yyyy","d mmmm. yyyy","dd mmmm. yyyy",
+                                 "d MMM, yyyy", "dd MMM, yyyy","d MMMM, yyyy","dd MMMM, yyyy", "d mmm, yyyy", "dd mmm, yyyy","d mmmm, yyyy","dd mmmm, yyyy"};
             DateTime releaseDate;
            // CultureInfo russianCulture = new CultureInfo("ru-RU");
             foreach (string format in formats)
