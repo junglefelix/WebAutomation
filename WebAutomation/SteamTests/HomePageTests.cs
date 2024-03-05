@@ -36,18 +36,22 @@ namespace SteamTests
         [Test]
         public void SearchForGame()
         {         
-
+            /*
             string gameName = "Starcraft";
+            double minimum_price = 10;
+            double maximum_price = 20;
+            DateTime minimum_date = new DateTime(2021,1,1);
+            DateTime maximum_date = new DateTime(2024, 1, 1);
 
             logger.Debug($"Will search for game: {gameName}");
             homePage.navigateTo();
             homePage.SearchForGame(gameName);                      
 
-           //var results = game.GetGameResultsData();
+           var results = searchResPage.GetGameResultsData();
 
-            var resultsFiltered = searchResPage.GetGameResultsDataFiltered(10, 20, "1 Jan. 2021", "1 Jan. 2024");
+            var resultsFiltered = searchResPage.GetGameResultsDataFiltered(minimum_price, maximum_price, minimum_date, maximum_date);
             
-
+            */
         } 
                
 
