@@ -29,27 +29,59 @@ namespace SteamTests
 
             logger.Debug($"#####################   TearDown Finished   ######################");
 
-        }
-
-       
-
+        }       
+        
         [Test]
-        public void SearchForGame_Filtered_Results()
-        {
-            
-            string gameName = "Starcraft";
-            double minimum_price = 10;
-            double maximum_price = 20;
-            DateTime minimum_date = new DateTime(2021,1,1);
-            DateTime maximum_date = new DateTime(2024, 1, 1);
-            
-            logger.Debug($"Will search for game: {gameName}");
+        [TestCase("Starcraft", 10, 20, "01/01/2021", "01/01/2024",5) ]
+        //Filter search results by game name, between which prices to search, between which dates to search. Assert number of results is above min_count value
+        public void SearchForGame_Filtered_Results(string searchGame,double minimum_price, double maximum_price,DateTime minimum_date, DateTime maximum_date, int min_count)
+        {              
+            logger.Debug($"Will search for game: {searchGame}");
             homePage.navigateTo();
             homePage.ChangeLanguage(Language.English);
-            homePage.SearchForGame(gameName);  
-            var resultsFiltered = searchResPage.GetGameResultsDataFiltered(minimum_price, maximum_price, minimum_date, maximum_date);              
+            homePage.SearchForGame(searchGame);  
+            var resultsFiltered = searchResPage.GetGameResultsDataFiltered(minimum_price, maximum_price, minimum_date, maximum_date);
+            Assert.That(resultsFiltered.Count > min_count);        
         }
+        
+        [Test]
+        [TestCase(50, "Starcraft")]
+        //Verify if the most expensive and most recent results in search list for game are not above your budget
+        public void Budget_verification(double your_budget, string searchGame)
+        {
+            logger.Debug($"Will search for game: {searchGame}");
+            homePage.navigateTo();
+            homePage.ChangeLanguage(Language.English);
+            homePage.SearchForGame(searchGame);
+            List<SearchEntry> games = searchResPage.GetGameResultsData();
+            var maxPriceEntry = searchResPage.getEntryWithMaxPriceOnResultsPage(games);
+            var recentDateEntry = searchResPage.getEntryWithRecentDateOnResultsPage(games);
+            Assert.That(maxPriceEntry.Price <= your_budget);
+            Assert.That(recentDateEntry.Price <= your_budget);
+        }
+        
+        
+        [Test]
+        [TestCase("Starcraft", "shoot")]
+        //Verify if the most expensive results in search list for game include mentioned word in description section
+        public void Verify_Description(string searchGame, string targetSearch)
+        {
+            logger.Debug($"Will search for game: {searchGame}");
+            homePage.navigateTo();
+            homePage.ChangeLanguage(Language.English);
+            homePage.SearchForGame(searchGame);
+            List<SearchEntry> games = searchResPage.GetGameResultsData();
+            var maxPriceEntry = searchResPage.getEntryWithMaxPriceOnResultsPage(games);
+            searchResPage.NavigateToEntryDetails(maxPriceEntry);
+            string description = gameDetailsPage.GetDescriptionText();            
+            Assert.That(description.Contains(targetSearch));
+        }
+        /*
+        [Test]
+        [TestCase(512,32,10.0,2.0, "Starcraft")]
+        //Verify if the most expensive and most recent results in search list for game meet sys.requirements (memory,graphics,directX,hdd) mentioned above     
 
+        /
         
        [Test]
        public void SearchForGame_AllResults()
@@ -64,14 +96,8 @@ namespace SteamTests
            List<SearchEntry> games  = searchResPage.GetGameResultsData();
        }
 
-
-       [Test]
-       public void ChangeLanguage()
-       {           
-           homePage.navigateTo();
-           homePage.ChangeLanguage(Language.Russian);
-           homePage.ChangeLanguage(Language.English); 
-       }
+        */
        
+
     }
 }

@@ -48,7 +48,7 @@ namespace SteamInfra.DataModels
                     return releaseDate.Date;
                 }
                 //Handling cases of empty date entry or entry like "Q2 2024"/"2024" or entry like "Coming soon" 
-                else if ((string.IsNullOrEmpty(releaseDateItem)) || (releaseDateItem.StartsWith("Q")) || (releaseDateItem.StartsWith("202")) || releaseDateItem.Contains("soon"))
+                else if ((string.IsNullOrEmpty(releaseDateItem)) || (releaseDateItem.StartsWith("Q")) || (releaseDateItem.StartsWith("202")) || releaseDateItem.Contains("soon")|| releaseDateItem.Contains("announced"))
                 {
                     return new DateTime(2030, 1, 1);
                 }

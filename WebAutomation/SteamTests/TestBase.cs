@@ -17,6 +17,7 @@ namespace SteamTests
         protected static ILogger logger;
         protected HomePage homePage => Pages.homePage;
         protected GameResultsPage searchResPage => Pages.gameResultsOnHomePage;
+        protected GameDetailsPage gameDetailsPage => Pages.gameDetailsPage;
 
 
         [OneTimeSetUp]
