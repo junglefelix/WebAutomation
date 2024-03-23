@@ -28,7 +28,7 @@ namespace SteamInfra.DataModels
         private double ConvertToDouble(string price)
         {
             
-            string priceWithoutSymbols = price.Replace("₪", "").Replace("Бесплатно", "0.0").Replace("$", "").Replace("Free", "0.0");
+            string priceWithoutSymbols = price.Replace("₪", "").Replace("Your Price:\r\n", "").Replace("$", "").Replace("Free", "0.0");
             double finalPrice = Convert.ToDouble(priceWithoutSymbols, CultureInfo.InvariantCulture);
             return finalPrice;
         }

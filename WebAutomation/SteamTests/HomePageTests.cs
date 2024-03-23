@@ -30,7 +30,7 @@ namespace SteamTests
             logger.Debug($"#####################   TearDown Finished   ######################");
 
         }       
-        
+        /*
         [Test]
         [TestCase("Starcraft", 10, 20, "01/01/2021", "01/01/2024",5) ]
         //Filter search results by game name, between which prices to search, between which dates to search. Assert number of results is above min_count value
@@ -76,13 +76,33 @@ namespace SteamTests
             string description = gameDetailsPage.GetDescriptionText();            
             Assert.That(description.Contains(targetSearch));
         }
-        /*
-        [Test]
-        [TestCase(512,32,10.0,2.0, "Starcraft")]
-        //Verify if the most expensive and most recent results in search list for game meet sys.requirements (memory,graphics,directX,hdd) mentioned above     
+        */
 
-        /
-        
+        [Test]
+        [TestCase(32, 32, "Starcraft",2)]
+        //Verify if the most expensive / most recent results in search list for game meet sys.requirements (memory,hdd in GB) mentioned above     
+        public void VerifySystemRequirements(double my_memory, double my_storage, string searchGame,int choice)
+        {
+            logger.Debug($"Will search for game: {searchGame}");
+            homePage.navigateTo();
+            homePage.ChangeLanguage(Language.English);
+            homePage.SearchForGame(searchGame);
+            List<SearchEntry> games = searchResPage.GetGameResultsData();
+            if (choice == 1)  //choice of most expensive game from the list
+            {
+                var maxPriceEntry = searchResPage.getEntryWithMaxPriceOnResultsPage(games);
+                searchResPage.NavigateToEntryDetails(maxPriceEntry);
+            }
+            else //choice of most recent release game from the list
+            {
+                var recentDateEntry = searchResPage.getEntryWithRecentDateOnResultsPage(games);
+                searchResPage.NavigateToEntryDetails(recentDateEntry);
+            }
+            SystemRequirements gameReqs = gameDetailsPage.GetSystemRequirements();
+            SystemRequirements mySpecifications = new SystemRequirements(my_memory,my_storage);
+            Assert.That((mySpecifications.memory >= gameReqs.memory) && (mySpecifications.storage >= gameReqs.storage));
+        }
+        /*
        [Test]
        public void SearchForGame_AllResults()
        {         
@@ -97,7 +117,7 @@ namespace SteamTests
        }
 
         */
-       
+
 
     }
 }
