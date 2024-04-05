@@ -24,23 +24,24 @@ namespace SteamInfra.Pages
       
         public List<SearchEntry> GetGameResultsData()
         {
-            var results = ProcessingEntries();      
+            var results = ProcessEntries();      
             return results;
         }
         public List<SearchEntry> GetGameResultsDataFiltered(double minPrice, double maxPrice, DateTime minDate, DateTime maxDate)
         {
-            var results = ProcessingEntries();
-            var resultsFiltered = new List<SearchEntry>();
-            foreach ( var entry in results) 
-            {
-                if ((minPrice <= entry.Price) && (entry.Price <= maxPrice) && (minDate <= entry.ReleaseDate) && (entry.ReleaseDate <= maxDate))
-                {
-                    resultsFiltered.Add(entry);
-                }
-            }
-            return resultsFiltered;
+            List<SearchEntry> results = ProcessEntries();
+            //var resultsFiltered = new List<SearchEntry>();
+            //foreach ( var entry in results) 
+            //{
+            //    if ((minPrice <= entry.Price) && (entry.Price <= maxPrice) && (minDate <= entry.ReleaseDate) && (entry.ReleaseDate <= maxDate))
+            //    {
+            //        resultsFiltered.Add(entry);
+            //    }
+            //}
+            //return resultsFiltered;
+            return results.Where(r => r.Price >= minPrice && r.Price <= maxPrice && r.ReleaseDate >= minDate && r.ReleaseDate <= maxDate).ToList();
         }        
-        public List<SearchEntry> ProcessingEntries()
+        public List<SearchEntry> ProcessEntries()
         {
             var results = new List<SearchEntry>();
             var resultContainers = driver.FindElements(searchEntryParent);
