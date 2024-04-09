@@ -39,18 +39,10 @@ namespace SteamInfra.Pages
 
         public void SearchForGame(string gameName)
         {
-            try
-            {
+                pause(1000);
                 IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
                 searchWindow.Click();
-                searchWindow.SendKeys(gameName + Keys.Return);
-            }
-            catch (StaleElementReferenceException) 
-            {
-                IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
-                searchWindow.Click();
-                searchWindow.SendKeys(gameName + Keys.Return);
-            }
+                searchWindow.SendKeys(gameName + Keys.Return);           
         }
 
 

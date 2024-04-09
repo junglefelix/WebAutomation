@@ -84,27 +84,34 @@ namespace SteamTests
         
 
         [Test]
-        [TestCase(32, 32, "Starcraft",2)]
+        [TestCase(32, 32, "Starcraft")]
         //Verify if the most expensive / most recent results in search list for game meet sys.requirements (memory,hdd in GB) mentioned above     
-        public void VerifySystemRequirements(double my_memory, double my_storage, string searchGame,int choice)
+        public void VerifySystemRequirementsExpensive(double my_memory, double my_storage, string searchGame)
         {
             logger.Debug($"Will search for game: {searchGame}");
             homePage.navigateTo();
             homePage.ChangeLanguage(Language.English);
             homePage.SearchForGame(searchGame);
             List<SearchEntry> games = searchResPage.GetGameResultsData();
-            if (choice == 1)  //choice of most expensive game from the list
-            {
-                var maxPriceEntry = searchResPage.getEntryWithMaxPriceOnResultsPage(games);
-                searchResPage.NavigateToEntryDetails(maxPriceEntry);
-            }
-            else //choice of most recent release game from the list
-            {
-                var recentDateEntry = searchResPage.getEntryWithRecentDateOnResultsPage(games);
-                searchResPage.NavigateToEntryDetails(recentDateEntry);
-            }
-            SystemRequirements gameReqs = gameDetailsPage.GetSystemRequirements();
-            //SystemRequirements mySpecifications = new SystemRequirements(my_memory,my_storage);
+            var maxPriceEntry = games.OrderByDescending(g => g.Price).First(); 
+            searchResPage.NavigateToEntryDetails(maxPriceEntry);           
+            SystemRequirements gameReqs = gameDetailsPage.GetSystemRequirements();            
+            Assert.That((my_memory >= gameReqs.memory) && (my_storage >= gameReqs.storage));
+        }
+
+        [Test]
+        [TestCase(32, 32, "Starcraft")]
+        //Verify if the most expensive / most recent results in search list for game meet sys.requirements (memory,hdd in GB) mentioned above     
+        public void VerifySystemRequirementsLatest(double my_memory, double my_storage, string searchGame)
+        {
+            logger.Debug($"Will search for game: {searchGame}");
+            homePage.navigateTo();
+            homePage.ChangeLanguage(Language.English);
+            homePage.SearchForGame(searchGame);
+            List<SearchEntry> games = searchResPage.GetGameResultsData();           
+            var recentDateEntry = games.OrderByDescending(g => g.ReleaseDate).First();
+            searchResPage.NavigateToEntryDetails(recentDateEntry);            
+            SystemRequirements gameReqs = gameDetailsPage.GetSystemRequirements();          
             Assert.That((my_memory >= gameReqs.memory) && (my_storage >= gameReqs.storage));
         }
         /*

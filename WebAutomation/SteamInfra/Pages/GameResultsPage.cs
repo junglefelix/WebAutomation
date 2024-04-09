@@ -29,15 +29,7 @@ namespace SteamInfra.Pages
         }
         public List<SearchEntry> GetGameResultsDataFiltered(double minPrice, double maxPrice, DateTime minDate, DateTime maxDate)
         {
-            var results = ProcessingEntries();
-          /*  var resultsFiltered = new List<SearchEntry>();
-            foreach ( var entry in results) 
-            {
-                if ((minPrice <= entry.Price) && (entry.Price <= maxPrice) && (minDate <= entry.ReleaseDate) && (entry.ReleaseDate <= maxDate))
-                {
-                    resultsFiltered.Add(entry);
-                }
-            }*/
+            var results = ProcessingEntries();         
             return results.Where(r_entry => r_entry.Price >= minPrice && r_entry.Price <= maxPrice && r_entry.ReleaseDate >= minDate && r_entry.ReleaseDate <= maxDate).ToList();
         }        
         public List<SearchEntry> ProcessingEntries()
