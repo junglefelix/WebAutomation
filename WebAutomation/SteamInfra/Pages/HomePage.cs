@@ -28,16 +28,29 @@ namespace SteamInfra.Pages
         public HomePage navigateTo()
         {
             driver.Navigate().GoToUrl(baseUrl + HomePageSuffix);
+        //    driver.FindElement(languageSelector).Click();
+         //   driver.FindElement(By.LinkText("English (английский)")).Click();
+
+
+            //waitForPageToLoad();
             pause(1000);
             return this;
         }
 
         public void SearchForGame(string gameName)
         {
-            pause(500);
-            IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
-            searchWindow.Click();
-            searchWindow.SendKeys(gameName + Keys.Return);     
+            try
+            {
+                IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
+                searchWindow.Click();
+                searchWindow.SendKeys(gameName + Keys.Return);
+            }
+            catch (StaleElementReferenceException) 
+            {
+                IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
+                searchWindow.Click();
+                searchWindow.SendKeys(gameName + Keys.Return);
+            }
         }
 
 
@@ -58,9 +71,9 @@ namespace SteamInfra.Pages
                 default:
                     break;
             }
-            if (selectedLangMenu == null)
+            if(selectedLangMenu == null)
             {
-                logger.Debug($"Expected language: {language} not present, this means already selected");
+                logger.Debug($"Expected language: {language} not present -> this means it is already selected");
                 pause(500);
                 Actions actions = new Actions(driver);
                 actions.SendKeys(Keys.Escape).Perform();
@@ -69,6 +82,7 @@ namespace SteamInfra.Pages
             {
                 selectedLangMenu.Click();
             }
+          
         }
       
 
