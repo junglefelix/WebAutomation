@@ -30,15 +30,15 @@ namespace SteamInfra.Pages
         public List<SearchEntry> GetGameResultsDataFiltered(double minPrice, double maxPrice, DateTime minDate, DateTime maxDate)
         {
             var results = ProcessingEntries();
-            var resultsFiltered = new List<SearchEntry>();
+          /*  var resultsFiltered = new List<SearchEntry>();
             foreach ( var entry in results) 
             {
                 if ((minPrice <= entry.Price) && (entry.Price <= maxPrice) && (minDate <= entry.ReleaseDate) && (entry.ReleaseDate <= maxDate))
                 {
                     resultsFiltered.Add(entry);
                 }
-            }
-            return resultsFiltered;
+            }*/
+            return results.Where(r_entry => r_entry.Price >= minPrice && r_entry.Price <= maxPrice && r_entry.ReleaseDate >= minDate && r_entry.ReleaseDate <= maxDate).ToList();
         }        
         public List<SearchEntry> ProcessingEntries()
         {
@@ -75,39 +75,7 @@ namespace SteamInfra.Pages
             return results;
         }
 
-        public SearchEntry getEntryWithMaxPriceOnResultsPage(List<SearchEntry> results)
-        {
-            double maxPrice = 0;
-            SearchEntry maxPriceGameEntry = new SearchEntry();
-            
-            foreach (var entry in results)
-            {
-               if (entry.Price > maxPrice)
-                {
-                    maxPrice = entry.Price;
-                    maxPriceGameEntry = entry;
-                }
-            }
-            
-            return maxPriceGameEntry;
-
-        }
-        public SearchEntry getEntryWithRecentDateOnResultsPage(List<SearchEntry> results)
-        {
-            DateTime recentDate = DateTime.MinValue;           
-            SearchEntry recentDateGameEntry = new SearchEntry();
-
-            foreach (var entry in results)
-            {
-                if (entry.ReleaseDate > recentDate)
-                {
-                    recentDate = entry.ReleaseDate;
-                    recentDateGameEntry = entry;
-                }
-            }
-            return recentDateGameEntry;
-
-        }
+  
 
         public void NavigateToEntryDetails(SearchEntry entry)
         {

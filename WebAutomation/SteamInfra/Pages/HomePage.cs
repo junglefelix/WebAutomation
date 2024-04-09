@@ -1,5 +1,6 @@
 ﻿
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,29 +28,16 @@ namespace SteamInfra.Pages
         public HomePage navigateTo()
         {
             driver.Navigate().GoToUrl(baseUrl + HomePageSuffix);
-        //    driver.FindElement(languageSelector).Click();
-         //   driver.FindElement(By.LinkText("English (английский)")).Click();
-
-
-            //waitForPageToLoad();
             pause(1000);
             return this;
         }
 
         public void SearchForGame(string gameName)
         {
-            try
-            {
-                IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
-                searchWindow.Click();
-                searchWindow.SendKeys(gameName + Keys.Return);
-            }
-            catch (StaleElementReferenceException) 
-            {
-                IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
-                searchWindow.Click();
-                searchWindow.SendKeys(gameName + Keys.Return);
-            }
+            pause(500);
+            IWebElement searchWindow = locatorHelper.waitForElement(searchSelector);
+            searchWindow.Click();
+            searchWindow.SendKeys(gameName + Keys.Return);     
         }
 
 
@@ -62,16 +50,25 @@ namespace SteamInfra.Pages
             switch (language)
             {
                 case Language.English:
-                    selectedLangMenu = languageMenus.Single(m => m.Text.ToLower().Contains("english"));
+                    selectedLangMenu = languageMenus.SingleOrDefault(m => m.Text.ToLower().Contains("english"));
                     break;
                 case Language.Russian:
-                    selectedLangMenu = languageMenus.Single(m => m.Text.ToLower().Contains("russian"));
+                    selectedLangMenu = languageMenus.SingleOrDefault(m => m.Text.ToLower().Contains("russian"));
                     break;
                 default:
                     break;
             }
-            selectedLangMenu.Click();
-            int t = 5;
+            if (selectedLangMenu == null)
+            {
+                logger.Debug($"Expected language: {language} not present, this means already selected");
+                pause(500);
+                Actions actions = new Actions(driver);
+                actions.SendKeys(Keys.Escape).Perform();
+            }
+            else
+            {
+                selectedLangMenu.Click();
+            }
         }
       
 

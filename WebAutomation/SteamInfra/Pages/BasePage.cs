@@ -18,13 +18,15 @@ namespace SteamInfra.Pages
         protected const int HOUR = 60 * MINUTE;
         protected static IWebDriver driver;
         protected static string baseUrl;
+        protected static string mallUrl;
         protected static  LocatorHelper locatorHelper;
       
 
 
-        public static void initDriver(string _baseUrl)
+        public static void initDriver(string _baseUrl,string _mallUrl)
         {
             baseUrl = _baseUrl;
+            mallUrl = _mallUrl;
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--start-maximized");
             options.AddArgument("--metrics-recording-only");

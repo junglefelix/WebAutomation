@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using SteamInfra.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -8,22 +8,22 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace SteamInfra.Pages
+namespace SteamInfra.DataModels
 {
     public class SystemRequirements
     {
-       public double memory;       
-       public double storage;
+        public double memory;
+        public double storage;
 
-        public SystemRequirements(string memory,string storage) 
+        public SystemRequirements(string memory, string storage)
         {
-            this.memory = GetMemory(memory);           
+            this.memory = GetMemory(memory);
             this.storage = GetStorage(storage);
         }
 
         public SystemRequirements(double memory, double storage)
         {
-            this.memory = memory;            
+            this.memory = memory;
             this.storage = storage;
         }
 
@@ -33,9 +33,9 @@ namespace SteamInfra.Pages
 
             Match match = Regex.Match(storage, pattern);
 
-           string pattern2 = @"Storage: (\d+) MB available space";
+            string pattern2 = @"Storage: (\d+) MB available space";
 
-           Match match2 = Regex.Match(storage, pattern2);
+            Match match2 = Regex.Match(storage, pattern2);
 
 
             // If a match is found, extract and return the version number as a double
@@ -58,36 +58,36 @@ namespace SteamInfra.Pages
             }
             return 0;
         }
-    
+
         private double GetMemory(string memory)
-    {
-        string pattern = @"Memory: (\d+) GB RAM";
+        {
+            string pattern = @"Memory: (\d+) GB RAM";
 
-        Match match = Regex.Match(memory, pattern);
+            Match match = Regex.Match(memory, pattern);
 
-        string pattern2 = @"Memory: (\d+) MB RAM";
+            string pattern2 = @"Memory: (\d+) MB RAM";
 
-        Match match2 = Regex.Match(memory, pattern2);
+            Match match2 = Regex.Match(memory, pattern2);
 
             // If a match is found, extract and return the version number as a double
             // my specifications are in GB so if System requirements on page are specified in MB, need to divide by 1024 to get proper comparison
             if (match.Success)
-        {
-            string memoryStr = match.Groups[1].Value;
-            if (double.TryParse(memoryStr, out double memorySize))
             {
-                return memorySize;
+                string memoryStr = match.Groups[1].Value;
+                if (double.TryParse(memoryStr, out double memorySize))
+                {
+                    return memorySize;
+                }
             }
-        }
-        else if (match2.Success)
+            else if (match2.Success)
             {
                 string memoryStr = match2.Groups[1].Value;
                 if (double.TryParse(memoryStr, out double memorySize))
                 {
-                    return memorySize/1024;
+                    return memorySize / 1024;
                 }
             }
-        return 0;
+            return 0;
+        }
     }
-}
 }

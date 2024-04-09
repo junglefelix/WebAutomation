@@ -16,5 +16,10 @@ namespace SteamInfra.Pages
 
         private static GameDetailsPage _gameDetailsPage;
         public static GameDetailsPage gameDetailsPage => _gameDetailsPage ?? (_gameDetailsPage = new GameDetailsPage());
+
+        private static MallPage _carrefurPage;
+        public static MallPage carrefurPage => _carrefurPage ?? (_carrefurPage = new MallPage());
+
+ 
     }
 }
